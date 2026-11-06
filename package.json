@@ -1,0 +1,29 @@
+{
+  "name": "hub-entertain-backend",
+  "version": "1.0.0",
+  "description": "REST API for HubEntertain (Express + MongoDB + JWT)",
+  "type": "module",
+  "main": "src/server.js",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "seed": "node src/seed/seed.js",
+    "seed:destroy": "node src/seed/seed.js --destroy"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.9",
+    "express": "^5.3.0",
+    "express-rate-limit": "^7.5.1",
+    "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^8.24.8",
+    "morgan": "^1.12.1",
+    "zod": "^3.25.76"
+  }
+}
