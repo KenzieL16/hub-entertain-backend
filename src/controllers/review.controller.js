@@ -14,6 +14,7 @@ const serialize = (review, currentUser) => {
     comment: review.comment,
     createdAt: review.createdAt,
     updatedAt: review.updatedAt,
+    edited: review.updatedAt.getTime() - review.createdAt.getTime() > 1000,
     user: { id: String(user._id), name: user.fullName, avatar: initials },
     isMine: Boolean(currentUser && String(currentUser._id) === String(user._id)),
   };
@@ -48,17 +49,19 @@ export const listReviews = async (req, res) => {
   const contentId = await findContentId(req.params.slug);
   const { page, limit } = req.valid.query;
 
-  const [reviews, summary] = await Promise.all([
+  const [reviews, summary, mine] = await Promise.all([
     Review.find({ content: contentId })
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(limit)
       .populate('user', 'fullName'),
     getSummary(contentId),
+    req.user ? Review.findOne({ content: contentId, user: req.user._id }).populate('user', 'fullName') : null,
   ]);
 
   res.json({
     summary,
+    myReview: mine ? serialize(mine, req.user) : null,
     reviews: reviews.map((r) => serialize(r, req.user)),
     pagination: pagination(page, limit, summary.count),
   });
